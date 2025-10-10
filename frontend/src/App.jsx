@@ -6,9 +6,12 @@ import ProjectList from './projects/projectlist.jsx'
 import * as projectApi from './api/projects'
 import ProjectFilters from './components/ProjectFilters.jsx'
 import ProjectStatus from './projects/ProjectStatus.jsx'
+import NavBar from './components/NavBar.jsx'
+import './components/NavBar.css'
 
 
 function App() {
+  const [view, setView] = useState('login')
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
   const [loadError, setLoadError] = useState(null)
@@ -55,28 +58,37 @@ function App() {
 
   return (
     <>
+      <NavBar view={view} onNavigate={setView} />
       <main className="app-main">
-        <RegistrationPage />
-        <ProjectCreationForm onCreate={handleCreate} />
-        <>
-          <ProjectStatus loading={loading} error={loadError} submitting={submitting} />
-          {!loading && (
-            <>
-              <ProjectFilters query={query} status={statusFilter} onQueryChange={setQuery} onStatusChange={setStatusFilter} />
-              <ProjectList projects={projects.filter(p => {
-              // status filter
-              if (statusFilter && String(p.status).toLowerCase() !== String(statusFilter).toLowerCase()) return false
-              // query filter: name, description, or task titles
-              if (!query) return true
-              const q = String(query).toLowerCase()
-              if ((p.name || '').toLowerCase().includes(q)) return true
-              if ((p.description || '').toLowerCase().includes(q)) return true
-              if (Array.isArray(p.tasks) && p.tasks.some(t => (t.title||'').toLowerCase().includes(q))) return true
-              return false
-            })} />
-            </>
-          )}
-  </>
+        {view === 'login' && <RegistrationPage />}
+        {view === 'tasks' && (
+          <div>
+            <h2>Tasks</h2>
+            <p>Task view placeholder (implement tasks UI here)</p>
+          </div>
+        )}
+        {view === 'projects' && (
+          <>
+            <ProjectCreationForm onCreate={handleCreate} />
+            <ProjectStatus loading={loading} error={loadError} submitting={submitting} />
+            {!loading && (
+              <>
+                <ProjectFilters query={query} status={statusFilter} onQueryChange={setQuery} onStatusChange={setStatusFilter} />
+                <ProjectList projects={projects.filter(p => {
+                  // status filter
+                  if (statusFilter && String(p.status).toLowerCase() !== String(statusFilter).toLowerCase()) return false
+                  // query filter: name, description, or task titles
+                  if (!query) return true
+                  const q = String(query).toLowerCase()
+                  if ((p.name || '').toLowerCase().includes(q)) return true
+                  if ((p.description || '').toLowerCase().includes(q)) return true
+                  if (Array.isArray(p.tasks) && p.tasks.some(t => (t.title||'').toLowerCase().includes(q))) return true
+                  return false
+                })} />
+              </>
+            )}
+          </>
+        )}
       </main>
     </>
   )
