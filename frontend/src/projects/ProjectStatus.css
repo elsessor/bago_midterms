@@ -1,0 +1,9 @@
+.project-status {
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 8px 0 12px;
+  border: 1px solid #d1d5db;
+}
+.project-status--loading { background: #f8fafc; color: #0f172a; }
+.project-status--error { background: #fff5f5; color: #991b1b; border-color: #fecaca; }
+.project-status--submitting { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }

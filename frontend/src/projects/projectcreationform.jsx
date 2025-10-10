@@ -14,6 +14,8 @@ export default function ProjectCreationForm({ onCreate }) {
 
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
 
     function handleChange(event, index) {
         const { name, value } = event.target;
@@ -50,7 +52,7 @@ export default function ProjectCreationForm({ onCreate }) {
         return validationErrors;
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         const validationErrors = validate(formData);
         setErrors(validationErrors);
@@ -69,7 +71,17 @@ export default function ProjectCreationForm({ onCreate }) {
             tasks: nonEmptyTasks,
         };
         if (typeof onCreate === 'function') {
-            onCreate(createdProject);
+            try {
+                setSubmitting(true)
+                setSubmitError(null)
+                const resp = onCreate(createdProject)
+                // support async onCreate
+                if (resp && typeof resp.then === 'function') await resp
+            } catch (err) {
+                setSubmitError(err.message || String(err))
+            } finally {
+                setSubmitting(false)
+            }
         }
     }
 
@@ -82,6 +94,12 @@ export default function ProjectCreationForm({ onCreate }) {
                         Submitted. Creating project…
                     </div>
                 )}
+                    {submitting && (
+                        <div className="alert" role="status">Submitting…</div>
+                    )}
+                    {submitError && (
+                        <div className="alert error" role="alert">{submitError}</div>
+                    )}
                 <form className="project-form" onSubmit={handleSubmit} noValidate>
                     <div className="form-grid">
                         <div className="form-field full">
