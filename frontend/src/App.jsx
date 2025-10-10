@@ -4,11 +4,14 @@ import RegistrationPage from './auth/RegistrationPage.jsx'
 import ProjectCreationForm from './projects/projectcreationform.jsx'
 import ProjectList from './projects/projectlist.jsx'
 import * as projectApi from './api/projects'
+import ProjectFilters from './components/ProjectFilters.jsx'
 
 
 function App() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
+  const [query, setQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
 
   useEffect(() => {
     let mounted = true
@@ -43,7 +46,22 @@ function App() {
       <main className="app-main">
         <RegistrationPage />
         <ProjectCreationForm onCreate={handleCreate} />
-        {loading ? <div>Loading projects…</div> : <ProjectList projects={projects} />}
+        {loading ? <div>Loading projects…</div> : (
+          <>
+            <ProjectFilters query={query} status={statusFilter} onQueryChange={setQuery} onStatusChange={setStatusFilter} />
+            <ProjectList projects={projects.filter(p => {
+              // status filter
+              if (statusFilter && String(p.status).toLowerCase() !== String(statusFilter).toLowerCase()) return false
+              // query filter: name, description, or task titles
+              if (!query) return true
+              const q = String(query).toLowerCase()
+              if ((p.name || '').toLowerCase().includes(q)) return true
+              if ((p.description || '').toLowerCase().includes(q)) return true
+              if (Array.isArray(p.tasks) && p.tasks.some(t => (t.title||'').toLowerCase().includes(q))) return true
+              return false
+            })} />
+          </>
+        )}
       </main>
     </>
   )
