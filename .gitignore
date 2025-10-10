@@ -1,6 +1,0 @@
-# Frontend configuration and dependencies
-frontend/vite.config.js
-frontend/package.json
-frontend/package-lock.json
-frontend/eslint.config.js
-frontend/src/
