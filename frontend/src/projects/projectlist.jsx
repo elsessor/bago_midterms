@@ -1,4 +1,5 @@
 import './projectlist.css';
+import './ProjectResponsive.css';
 
 function formatDate(value) {
     if (!value) return '—';

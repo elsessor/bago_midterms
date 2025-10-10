@@ -1,4 +1,5 @@
 import "./projectcreationform.css";
+import "./ProjectResponsive.css";
 import { useState } from "react";
 
 export default function ProjectCreationForm({ onCreate }) {

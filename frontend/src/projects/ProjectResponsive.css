@@ -1,0 +1,45 @@
+/* Responsive tweaks for projects area (mobile and tablet) */
+
+/* Tweak grid and paddings for medium screens */
+@media (max-width: 900px) {
+  .project-list {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+  .project-card {
+    padding: 12px;
+  }
+  .project-card__title { font-size: 16px; }
+}
+
+/* Mobile: single column, stacked controls */
+@media (max-width: 720px) {
+  .project-list {
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 10px;
+  }
+
+  /* Make project creation form adapt */
+  .project-form-section {
+    padding: 12px;
+  }
+  .form-card { padding: 12px; border-radius: 12px; }
+
+  /* Filters stack vertically on mobile */
+  .project-filters { flex-direction: column; align-items: stretch; }
+  .project-filters .filter-input, .project-filters .filter-select { width: 100%; }
+
+  /* Make task items stack */
+  .task-item__content { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+/* Very small screens: slightly reduce font sizes and spacing */
+@media (max-width: 420px) {
+  .project-card__title { font-size: 15px; }
+  .task-item__title { font-size: 13px; }
+  .project-meta { gap: 6px; }
+  .form-field { gap: 4px; }
+  .btn { padding: 8px 10px; }
+}
