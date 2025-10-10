@@ -1,21 +1,49 @@
 import './App.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import RegistrationPage from './auth/RegistrationPage.jsx'
 import ProjectCreationForm from './projects/projectcreationform.jsx'
 import ProjectList from './projects/projectlist.jsx'
+import * as projectApi from './api/projects'
 
 
 function App() {
-  const [projects, setProjects] = useState([
-    { id: '1', name: 'Sample Project', description: 'Demo project', startDate: '2025-10-01', endDate: '2025-10-10', priority: 'medium', status: 'planned', tasks: [] }
-  ])
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    let mounted = true
+    async function load() {
+      setLoading(true)
+      try {
+        const body = await projectApi.listProjects('1')
+        if (!mounted) return
+        setProjects(Array.isArray(body.data) ? body.data : [])
+      } catch (err) {
+        console.warn('Could not load projects from backend, falling back to empty list', err)
+        if (mounted) setProjects([])
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    load()
+    return () => { mounted = false }
+  }, [])
+
+  async function handleCreate(project) {
+    try {
+      const body = await projectApi.createProject({ ...project, createdBy: '1' })
+      setProjects(prev => [body.data, ...prev])
+    } catch (err) {
+      console.error('Failed to create project', err)
+    }
+  }
 
   return (
     <>
       <main className="app-main">
         <RegistrationPage />
-        <ProjectCreationForm onCreate={(p) => setProjects(prev => [p, ...prev])} />
-        <ProjectList projects={projects} />
+        <ProjectCreationForm onCreate={handleCreate} />
+        {loading ? <div>Loading projects…</div> : <ProjectList projects={projects} />}
       </main>
     </>
   )
