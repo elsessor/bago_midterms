@@ -8,7 +8,7 @@ export default function TaskList() {
   const [editingTask, setEditingTask] = useState(null);
   const [editFormData, setEditFormData] = useState({ title: "", description: "" });
 
-  const API_URL = "http://localhost:3000";
+  const API_URL = "http://localhost:5000";
 
   // Fetch tasks on component mount
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function TaskList() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/tasks`, {
+      const response = await fetch(`${API_URL}/api/tasks`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -58,7 +58,7 @@ export default function TaskList() {
     try {
       const token = localStorage.getItem("token");
       
-      const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -105,7 +105,7 @@ export default function TaskList() {
     try {
       const token = localStorage.getItem("token");
       
-      const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+      const response = await fetch(`${API_URL}/api/tasks/${taskId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

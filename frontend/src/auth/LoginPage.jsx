@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:5000";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
