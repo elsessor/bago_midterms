@@ -1,13 +1,13 @@
 import './App.css'
 import RegistrationPage from './auth/RegistrationPage.jsx'
-import LoginPage from './auth/LoginPage.jsx'
+import ProjectCreationForm from './projects/projectcreationform.jsx'
 
 function App() {
   return (
     <>
       <main className="app-main">
         <RegistrationPage />
-        <LoginPage />
+        <ProjectCreationForm />
       </main>
     </>
   )
