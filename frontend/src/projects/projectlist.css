@@ -1,0 +1,132 @@
+.project-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 16px;
+	padding: 16px;
+	background: linear-gradient(135deg, #ff7a18 0%, #af002d 70%, #319197 100%);
+}
+
+.project-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	padding: 16px;
+}
+
+.project-card__header {
+	margin-bottom: 8px;
+}
+
+.project-card__title {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 4px 0;
+	color: #000000;
+}
+
+.project-card__description {
+	color: #6b7280;
+	margin: 0;
+}
+
+.project-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	margin-top: 8px;
+	color: #374151;
+}
+
+.task-list__items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.task-item {
+	border-top: 1px dashed #e5e7eb;
+	padding: 8px 0;
+}
+
+.task-item:first-child {
+	border-top: 0;
+}
+
+.task-item__content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.task-item__title {
+	font-size: 14px;
+}
+
+.task-item__status {
+	font-size: 12px;
+	border-radius: 9999px;
+	padding: 2px 8px;
+	border: 1px solid #d1d5db;
+	color: #374151;
+	background: #f9fafb;
+}
+
+.task-item__status--completed {
+	background: #ecfdf5;
+	border-color: #10b981;
+	color: #065f46;
+}
+
+.task-item__status--inprogress, .task-item__status--in_progress {
+	background: #eff6ff;
+	border-color: #3b82f6;
+	color: #1e40af;
+}
+
+.task-item__status--pending {
+	background: #fff7ed;
+	border-color: #fb923c;
+	color: #9a3412;
+}
+
+.task-list__empty {
+	color: #6b7280;
+	font-size: 14px;
+}
+
+.project-list__state {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.project-list__state--error {
+	color: #b91c1c;
+}
+
+.btn {
+	margin-left: 12px;
+	background: #111827;
+	color: #ffffff;
+	border: 0;
+	border-radius: 6px;
+	padding: 6px 10px;
+	cursor: pointer;
+}
+
+.spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid #e5e7eb;
+	border-top-color: #111827;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
