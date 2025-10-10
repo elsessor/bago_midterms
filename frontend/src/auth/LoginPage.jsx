@@ -5,7 +5,6 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    confirmPassword: "",
     role: "",
   });
   const [errors, setErrors] = useState({});
@@ -18,9 +17,6 @@ const LoginPage = () => {
 
     if (!formData.password) newErrors.password = "Password is required";
     else if (formData.password.length < 6) newErrors.password = "Min 6 characters";
-
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your password";
-    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
 
     if (!formData.role) newErrors.role = "Role is required";
 
@@ -43,7 +39,7 @@ const LoginPage = () => {
       console.log("Login form submitted:", formData);
       setSubmitted(true);
       setErrors({});
-      setFormData({ username: "", password: "", confirmPassword: "", role: "" });
+      setFormData({ username: "", password: "", role: "" });
     } else {
       setErrors(validationErrors);
       setSubmitted(false);
@@ -79,17 +75,6 @@ const LoginPage = () => {
             onChange={handleChange}
           />
           {errors.password && <span className="error">{errors.password}</span>}
-        </div>
-
-        <div className="form-group">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-          {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
         </div>
 
         <div className="form-group">
