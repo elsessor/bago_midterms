@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./LoginPage.css";
 
+const API_URL = "http://localhost:3000";
+
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -9,6 +11,7 @@ const LoginPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -31,15 +34,50 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Login form submitted:", formData);
-      setSubmitted(true);
+      setLoading(true);
       setErrors({});
-      setFormData({ username: "", password: "", role: "" });
+
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+            role: formData.role,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Login failed");
+        }
+
+        // Store token in localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        console.log("Login successful:", data);
+        setSubmitted(true);
+        setFormData({ username: "", password: "", role: "" });
+        
+        // Redirect or update app state here
+        // Example: window.location.href = "/dashboard";
+      } catch (error) {
+        console.error("Login error:", error);
+        setErrors({ general: error.message || "Login failed. Please try again." });
+        setSubmitted(false);
+      } finally {
+        setLoading(false);
+      }
     } else {
       setErrors(validationErrors);
       setSubmitted(false);
@@ -53,6 +91,10 @@ const LoginPage = () => {
 
         {submitted && (
           <div className="success-message">Login successful!</div>
+        )}
+
+        {errors.general && (
+          <div className="error-message">{errors.general}</div>
         )}
 
         <div className="form-group">
@@ -87,7 +129,9 @@ const LoginPage = () => {
           {errors.role && <span className="error">{errors.role}</span>}
         </div>
 
-        <button type="submit" className="submit-button">Login</button>
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

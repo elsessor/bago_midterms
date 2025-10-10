@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./RegistrationPage.css";
 
+const API_URL = "http://localhost:3000";
+
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -11,6 +13,7 @@ const RegistrationPage = () => {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -46,22 +49,54 @@ const RegistrationPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length === 0) {
-      // Form is valid, proceed with submission
-      console.log("Form submitted:", formData);
-      setSubmitted(true);
+      setLoading(true);
       setErrors({});
-      // Reset form
-      setFormData({
-        username: "",
-        password: "",
-        confirmPassword: "",
-        role: "",
-      });
+
+      try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+            role: formData.role,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Registration failed");
+        }
+
+        console.log("Registration successful:", data);
+        setSubmitted(true);
+        // Reset form
+        setFormData({
+          username: "",
+          password: "",
+          confirmPassword: "",
+          role: "",
+        });
+
+        // Optionally redirect to login page after successful registration
+        // setTimeout(() => {
+        //   window.location.href = "/login";
+        // }, 2000);
+      } catch (error) {
+        console.error("Registration error:", error);
+        setErrors({ general: error.message || "Registration failed. Please try again." });
+        setSubmitted(false);
+      } finally {
+        setLoading(false);
+      }
     } else {
       setErrors(validationErrors);
       setSubmitted(false);
@@ -77,6 +112,10 @@ const RegistrationPage = () => {
           <div className="success-message">
             Registration successful!
           </div>
+        )}
+
+        {errors.general && (
+          <div className="error-message">{errors.general}</div>
         )}
 
         <div className="form-group">
@@ -124,7 +163,9 @@ const RegistrationPage = () => {
           {errors.role && <span className="error">{errors.role}</span>}
         </div>
 
-        <button type="submit" className="submit-button">Register</button>
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
       </form>
     </div>
   );
